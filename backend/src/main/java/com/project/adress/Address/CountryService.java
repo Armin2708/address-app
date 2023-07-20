@@ -44,7 +44,7 @@ public class CountryService {
         if (!countryDao.existCountryWithId(id)) {
             throw new ResourceNotFoundException("country with id [%s] not found".formatted(id));
         }
-        countryDao.deleteCountryWithName(id);
+        countryDao.deleteCountryWithId(id);
     }
 
     public void updateCountry(String id, CountryUpdateRequest countryUpdateRequest) {
@@ -61,13 +61,21 @@ public class CountryService {
         if (countryUpdateRequest.id() != null && !countryUpdateRequest.id().equals(country.getId())) {
             country.setId(countryUpdateRequest.id());
             changes = true;
-
-
-            if (!changes) {
-                throw new RequestValidationException("no data changes found");
-            }
-
-            countryDao.updateCountry(country);
         }
+
+        if (countryUpdateRequest.name()!=null && !countryUpdateRequest.name().equals(country.getName())) {
+            if (countryDao.existCountryWithName(countryUpdateRequest.name())) {
+                throw new DuplicateResourceException(
+                        "name already taken");
+            }
+            country.setName(countryUpdateRequest.name());
+            changes=true;
+        }
+
+        if (!changes) {
+            throw new RequestValidationException("no data changes found");
+        }
+
+        countryDao.updateCountry(country);
     }
 }

@@ -9,7 +9,7 @@ cors:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5332/postgres
+    url: jdbc:postgresql://localhost:5332/databaseForAddress
     username: armin
     password: password
   jpa:

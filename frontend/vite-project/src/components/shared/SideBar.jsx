@@ -25,18 +25,14 @@ import {
 import {
     FiBell,
     FiChevronDown,
-    FiCompass,
     FiHome,
     FiMenu,
     FiSettings,
     FiStar,
-    FiTrendingUp
 } from 'react-icons/fi';
 
 const LinkItems = [
     {name: 'Home', icon: FiHome},
-    {name: 'Trending', icon: FiTrendingUp},
-    {name: 'Explore', icon: FiCompass},
     {name: 'Favourites', icon: FiStar},
     {name: 'Settings', icon: FiSettings},
 ];
@@ -88,8 +84,8 @@ const SidebarContent = ({onClose, ...rest}) => {
                 <Image
                     borderRadius='full'
                     boxSize='75px'
-                    src='https://user-images.githubusercontent.com/40702606/210880158-e7d698c2-b19a-4057-b415-09f48a746753.png'
-                    alt='Amigoscode'
+                    src='https://cdn-icons-png.flaticon.com/512/6618/6618280.png'
+                    alt='Address'
                 />
                 <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose}/>
             </Flex>
@@ -104,7 +100,7 @@ const SidebarContent = ({onClose, ...rest}) => {
 
 const NavItem = ({icon, children, ...rest}) => {
     return (
-        <Link href="frontend/vite-project/src/components/shared#" style={{textDecoration: 'none'}} _focus={{boxShadow: 'none'}}>
+        <Link href="/" style={{textDecoration: 'none'}} _focus={{boxShadow: 'none'}}>
             <Flex
                 align="center"
                 p="4"

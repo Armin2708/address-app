@@ -1,10 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import MainPage from './MainPage.jsx'
 import './index.css'
 import { ChakraProvider } from '@chakra-ui/react'
 
 import { createStandaloneToast } from '@chakra-ui/react'
+import App from "./App.jsx";
 
 const { ToastContainer } = createStandaloneToast()
 

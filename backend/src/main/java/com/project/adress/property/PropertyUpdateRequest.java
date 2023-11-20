@@ -1,7 +1,7 @@
 package com.project.adress.property;
 
 public record PropertyUpdateRequest(
-        String property_number,
+        String name,
         Integer street_id
 ) {
 }

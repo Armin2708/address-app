@@ -9,12 +9,11 @@ import {
     DrawerOverlay,
     useDisclosure
 } from "@chakra-ui/react";
-import CreateStateForm from "./CreateStateForm.jsx";
 import UpdateStateForm from "./UpdateStateForm.jsx";
 
 const CloseIcon = () => "x";
 
-const UpdateStateDrawerForm = ({ fetchCountries, name, id }) => {
+const UpdateStateDrawerForm = ({ fetchStates, stateName, stateId }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return <>
         <Button
@@ -33,13 +32,13 @@ const UpdateStateDrawerForm = ({ fetchCountries, name, id }) => {
             <DrawerOverlay />
             <DrawerContent>
                 <DrawerCloseButton />
-                <DrawerHeader>Update country</DrawerHeader>
+                <DrawerHeader>Update state</DrawerHeader>
 
                 <DrawerBody>
                     <UpdateStateForm
-                        fetchCountries={fetchCountries}
-                        initialValues={{name,id}}
-                        id={id}
+                        fetchStates={fetchStates}
+                        stateName={stateName}
+                        stateId={stateId}
                     />
                 </DrawerBody>
 

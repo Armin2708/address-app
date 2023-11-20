@@ -18,12 +18,13 @@ public class StreetJDBCAccessService implements StreetDao {
     }
 
     @Override
-    public List<Street> selectAllStreets() {
+    public List<Street> selectAllStreets(Integer cityId) {
         var sql = """
                  SELECT city_id,name,street_id
                  FROM streets
+                 WHERE city_id=?
                  """;
-        return jdbcTemplate.query(sql, streetRowMapper);
+        return jdbcTemplate.query(sql, streetRowMapper,cityId);
     }
 
     @Override

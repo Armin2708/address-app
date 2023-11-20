@@ -28,15 +28,16 @@ class PropertyJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void selectAllProperties() {
         //Given
+        Integer streetId = 1000;
         Property property = new Property(
                 111,
                 "Tested1",
-                1000
+                streetId
         );
         underTest.insertProperty(property);
 
         //When
-        List<Property> actual = underTest.selectAllProperties();
+        List<Property> actual = underTest.selectAllProperties(streetId);
 
         //Then
         assertThat(actual).isNotEmpty();
@@ -46,15 +47,16 @@ class PropertyJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void selectPropertyById() {
         //Given
+        Integer streetId = 1000;
         String Property_number = "Tested2";
         Property property = new Property(
                 222,
                 Property_number,
-                1000
+                streetId
         );
         underTest.insertProperty(property);
 
-        int id = underTest.selectAllProperties()
+        int id = underTest.selectAllProperties(streetId)
                 .stream()
                 .filter(c -> c.getProperty_number().equals(Property_number))
                 .map(Property::getProperty_id)
@@ -124,15 +126,16 @@ class PropertyJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void existPropertyById() {
         //Given
+        Integer streetId = 1000;
         String Property_number = "Tested4";
         Property property = new Property(
                 400,
                 Property_number,
-                1000
+                streetId
         );
         underTest.insertProperty(property);
 
-        int id = underTest.selectAllProperties()
+        int id = underTest.selectAllProperties(streetId)
                 .stream()
                 .filter(c -> c.getProperty_number().equals(Property_number))
                 .map(Property::getProperty_id)
@@ -164,15 +167,16 @@ class PropertyJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void deletePropertyById() {
         //Given
+        Integer streetId = 1000;
         String Property_number = "Tested5";
         Property property = new Property(
                 500,
                 Property_number,
-                1000
+                streetId
         );
         underTest.insertProperty(property);
 
-        int id = underTest.selectAllProperties()
+        int id = underTest.selectAllProperties(streetId)
                 .stream()
                 .filter(c -> c.getProperty_number().equals(Property_number))
                 .map(Property::getProperty_id)
@@ -216,15 +220,16 @@ class PropertyJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void updatePropertyProperty_number() {
         //Given
+        Integer streetId = 1000;
         String Property_number = "Tested6";
         Property property = new Property(
                 600,
                 Property_number,
-                1000
+                streetId
         );
         underTest.insertProperty(property);
 
-        int id = underTest.selectAllProperties()
+        int id = underTest.selectAllProperties(streetId)
                 .stream()
                 .filter(c->c.getProperty_number().equals(Property_number))
                 .map(Property::getProperty_id)
@@ -253,15 +258,16 @@ class PropertyJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void updatePropertyStreetId() {
         //Given
+        Integer streetId = 1000;
         String Property_number = "Tested7";
         Property property = new Property(
                 700,
                 Property_number,
-                1000
+                streetId
         );
         underTest.insertProperty(property);
 
-        int id = underTest.selectAllProperties()
+        int id = underTest.selectAllProperties(streetId)
                 .stream()
                 .filter(c->c.getProperty_number().equals(Property_number))
                 .map(Property::getProperty_id)
@@ -290,15 +296,16 @@ class PropertyJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void updateAllPropertyProperties() {
         //Given
+        Integer streetId = 1000;
         String Property_number = "Tested8";
         Property property=new Property(
                 800,
                 Property_number,
-                1000
+                streetId
         );
         underTest.insertProperty(property);
 
-        int id = underTest.selectAllProperties()
+        int id = underTest.selectAllProperties(streetId)
                 .stream()
                 .filter(c -> c.getProperty_number().equals(Property_number))
                 .map(Property::getProperty_id)
@@ -329,15 +336,16 @@ class PropertyJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void willNotUpdateWhenNoUpdate() {
         //Given
+        Integer streetId = 1000;
         String Property_number = "Tested9";
         Property property=new Property(
                 900,
                 Property_number,
-                1000
+                streetId
         );
         underTest.insertProperty(property);
 
-        int id = underTest.selectAllProperties()
+        int id = underTest.selectAllProperties(streetId)
                 .stream()
                 .filter(c -> c.getProperty_number().equals(Property_number))
                 .map(Property::getProperty_id)

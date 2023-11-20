@@ -16,7 +16,7 @@ public class PropertyService {
     public PropertyService(@Qualifier("Propertyjdbc") PropertyDao propertyDao){
         this.propertyDao = propertyDao;
     }
-    public List<Property> getAllProperties(){return propertyDao.selectAllProperties();}
+    public List<Property> getAllProperties(Integer streetId){return propertyDao.selectAllProperties(streetId);}
 
     public Property getProperty(Integer id){
         return propertyDao.selectPropertyById(id)
@@ -24,14 +24,14 @@ public class PropertyService {
     }
 
     public void addProperty(PropertyRegistrationRequest propertyRegistrationRequest){
-        String property_number = propertyRegistrationRequest.property_number();
+        String name = propertyRegistrationRequest.name();
         Integer id = propertyRegistrationRequest.property_id();
         Integer street_id = propertyRegistrationRequest.street_id();
 
         if (propertyDao.existPropertyById(id)){
             throw new DuplicateResourceException("property id already taken");
         }
-        if (propertyDao.existPropertyWithNumber(property_number)){
+        if (propertyDao.existPropertyWithName(name)){
             throw new DuplicateResourceException("property name already taken");
         }
         Integer streetId = propertyRegistrationRequest.street_id();
@@ -40,7 +40,7 @@ public class PropertyService {
         }
         Property property = new Property(
                 propertyRegistrationRequest.property_id(),
-                propertyRegistrationRequest.property_number(),
+                propertyRegistrationRequest.name(),
                 propertyRegistrationRequest.street_id()
         );
         propertyDao.insertProperty(property);
@@ -60,11 +60,11 @@ public class PropertyService {
                 ));
         boolean changes=false;
 
-        if (propertyUpdateRequest.property_number()!=null && !propertyUpdateRequest.property_number().equals(property.getProperty_number())) {
-            if(propertyDao.existPropertyWithNumber(propertyUpdateRequest.property_number())) {
-                throw new DuplicateResourceException("property number already taken but no repetition");
+        if (propertyUpdateRequest.name()!=null && !propertyUpdateRequest.name().equals(property.getName())) {
+            if(propertyDao.existPropertyWithName(propertyUpdateRequest.name())) {
+                throw new DuplicateResourceException("property name already taken");
             }
-            property.setProperty_number(propertyUpdateRequest.property_number());
+            property.setName(propertyUpdateRequest.name());
             changes=true;
         }
 

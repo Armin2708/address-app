@@ -18,18 +18,19 @@ public class PropertyJDBCAccessService implements PropertyDao {
     }
 
     @Override
-    public List<Property> selectAllProperties() {
+    public List<Property> selectAllProperties(Integer streetId) {
         var sql = """
-                 SELECT street_id,property_number,property_id
+                 SELECT street_id,name,property_id
                  FROM properties
+                 WHERE street_id=?
                  """;
-        return jdbcTemplate.query(sql, propertyRowMapper);
+        return jdbcTemplate.query(sql, propertyRowMapper,streetId);
     }
 
     @Override
     public Optional<Property> selectPropertyById(Integer id) {
         var sql = """
-                SELECT street_id,property_number,property_id
+                SELECT street_id,name,property_id
                 FROM properties
                 WHERE property_id=?
                 """;
@@ -41,13 +42,13 @@ public class PropertyJDBCAccessService implements PropertyDao {
     @Override
     public void insertProperty(Property property) {
         var sql = """
-                INSERT INTO properties(property_id,property_number,street_id)
+                INSERT INTO properties(property_id,name,street_id)
                 VALUES(?,?,?)
                 """;
         int result = jdbcTemplate.update(
                 sql,
                 property.getProperty_id(),
-                property.getProperty_number(),
+                property.getName(),
                 property.getStreet_id()
         );
         System.out.println("jdbcTemplate.update = "+result);
@@ -78,13 +79,13 @@ public class PropertyJDBCAccessService implements PropertyDao {
     }
 
     @Override
-    public boolean existPropertyWithNumber(String property_number) {
+    public boolean existPropertyWithName(String name) {
         var sql = """
                 SELECT count(property_id)
                 FROM properties
-                WHERE property_number=?
+                WHERE name=?
                 """;
-        Integer count = jdbcTemplate.queryForObject(sql,Integer.class,property_number);
+        Integer count = jdbcTemplate.queryForObject(sql,Integer.class,name);
         return count !=null &&count>0;
     }
 
@@ -101,14 +102,14 @@ public class PropertyJDBCAccessService implements PropertyDao {
 
     @Override
     public void updateProperty(Property update) {
-        if(update.getProperty_number()!=null){
-            String sql = "UPDATE properties SET property_number = ? WHERE property_id = ?";
+        if(update.getName()!=null){
+            String sql = "UPDATE properties SET name = ? WHERE property_id = ?";
             int result = jdbcTemplate.update(
                     sql,
-                    update.getProperty_number(),
+                    update.getName(),
                     update.getProperty_id()
             );
-            System.out.println("update property property_number result = " +result);
+            System.out.println("update property name result = " +result);
         }
 
         if (update.getStreet_id() != null) {

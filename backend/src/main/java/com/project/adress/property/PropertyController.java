@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/countries/states/cities/streets/properties")
+@RequestMapping("api/v1/countries/states/cities/{streetId}/properties")
 public class PropertyController {
 
     private final PropertyService propertyService;
@@ -13,7 +13,10 @@ public class PropertyController {
     public PropertyController(PropertyService propertyService){this.propertyService = propertyService;}
 
     @GetMapping
-    public List<Property> getProperty(){return propertyService.getAllProperties();}
+    public List<Property> getProperties(
+            @PathVariable String streetId){
+        Integer streetIdInt = Integer.parseInt(streetId);
+        return propertyService.getAllProperties(streetIdInt);}
 
     @GetMapping("{propertyId}")
     public Property getProperty(
@@ -22,8 +25,16 @@ public class PropertyController {
     }
 
     @PostMapping
-    public void registerProperty(@RequestBody PropertyRegistrationRequest request){
-        propertyService.addProperty(request);
+    public void registerProperty(
+            @RequestBody PropertyRegistrationRequest request,
+            @PathVariable String streetId){
+        Integer streetIdInt = Integer.parseInt(streetId);
+        PropertyRegistrationRequest propertyRegistrationRequest = new PropertyRegistrationRequest(
+                request.property_id(),
+                request.name(),
+                streetIdInt
+        );
+        propertyService.addProperty(propertyRegistrationRequest);
     }
 
     @DeleteMapping("{propertyId}")

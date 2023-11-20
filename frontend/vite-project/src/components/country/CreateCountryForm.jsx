@@ -1,7 +1,7 @@
 import {Form, Formik, useField} from 'formik';
 import * as Yup from 'yup';
 import {Alert, AlertIcon, Box, Button, FormLabel, Input, Select, Stack} from "@chakra-ui/react";
-import {saveCountry} from "../../services/client.js";
+import {saveCountry} from "../../services/countryClient.js";
 import {successNotification, errorNotification} from "../../services/notification.js";
 
 const MyTextInput = ({label, ...props}) => {
@@ -27,14 +27,14 @@ const CreateCountryForm = ({ fetchCountries }) => {
         <>
             <Formik
                 initialValues={{
-                    name: '',
-                    id: ''
+                    countryName: '',
+                    countryId: ''
                 }}
                 validationSchema={Yup.object({
-                    name: Yup.string()
-                        .max(15, 'Must be 15 characters or less')
+                    countryName: Yup.string()
+                        .max(30, 'Must be 15 characters or less')
                         .required('Required'),
-                    id: Yup.string()
+                    countryId: Yup.string()
                         .max(3, 'Must be 3 characters')
                         .required('Required')
                 })}
@@ -64,14 +64,14 @@ const CreateCountryForm = ({ fetchCountries }) => {
                         <Stack spacing={"24px"}>
                             <MyTextInput
                                 label="Name"
-                                name="name"
+                                name="countryName"
                                 type="text"
                                 placeholder="France"
                             />
 
                             <MyTextInput
                                 label="Id"
-                                name="id"
+                                name="countryId"
                                 type="text"
                                 placeholder="FRA"
                             />

@@ -35,10 +35,10 @@ class StateServiceTest {
         //Given
 
         //When
-        underTest.getAllStates();
+        underTest.getAllStates("CT1");
 
         //Then
-        verify(stateDao).selectAllStates();
+        verify(stateDao).selectAllStates("CT1");
     }
 
     @Test
@@ -84,7 +84,7 @@ class StateServiceTest {
         //When
         assertThatThrownBy(() ->underTest.addState(stateRegistrationRequest))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("country id does not exist");
+                .hasMessage("country id "+stateRegistrationRequest.country_id()+" does not exist");
 
         //Then
         verify(stateDao,never()).insertState(state);
@@ -198,10 +198,8 @@ class StateServiceTest {
         when(stateDao.selectStateById(id)).thenReturn(Optional.of(state));
 
         String newName = "California";
-        String newCountryId = "XXX";
-        when(stateDao.existCountryWithCountryId(newCountryId)).thenReturn(true);
 
-        StateUpdateRequest update = new StateUpdateRequest(newName,newCountryId);
+        StateUpdateRequest update = new StateUpdateRequest(newName);
 
         when(stateDao.existStateWithName(newName)).thenReturn(false);
 
@@ -215,7 +213,7 @@ class StateServiceTest {
         State capturedState = stateArgumentCaptor.getValue();
 
         assertThat(capturedState.getName()).isEqualTo(update.name());
-        assertThat(capturedState.getCountry_id()).isEqualTo(update.country_id());
+
 
     }
 
@@ -229,7 +227,7 @@ class StateServiceTest {
 
         String newName = "California";
 
-        StateUpdateRequest update = new StateUpdateRequest(newName,null);
+        StateUpdateRequest update = new StateUpdateRequest(newName);
 
         when(stateDao.existStateWithName(newName)).thenReturn(false);
 
@@ -247,7 +245,7 @@ class StateServiceTest {
 
     }
 
-    @Test
+    /*@Test
     void canOnlyUpdateStateCountryId() {
 
         //Given
@@ -272,7 +270,7 @@ class StateServiceTest {
         assertThat(capturedState.getName()).isEqualTo(state.getName());
         assertThat(capturedState.getCountry_id()).isEqualTo(update.country_id());
 
-    }
+    }*/
 
     @Test
     void willThrowUpdateWhenStateNameAlreadyTaken(){
@@ -284,7 +282,7 @@ class StateServiceTest {
         String newName = "California";
         when(stateDao.existStateWithName(newName)).thenReturn(true);
 
-        StateUpdateRequest update = new StateUpdateRequest(newName,null);
+        StateUpdateRequest update = new StateUpdateRequest(newName);
 
         //When
         assertThatThrownBy(()->underTest.updateState(id,update))
@@ -296,7 +294,7 @@ class StateServiceTest {
 
     }
 
-    @Test
+    /*@Test
     void willThrowUpdateWhenCountryIdNotExists(){
         //Given
         int id = 10;
@@ -317,7 +315,7 @@ class StateServiceTest {
         //Then
         verify(stateDao,never()).updateState(any());
 
-    }
+    }*/
 
     @Test
     void willThrowUpdateWhenNoChanges(){
@@ -327,7 +325,7 @@ class StateServiceTest {
         State state = new State(id,"State","FRA");
         when(stateDao.selectStateById(id)).thenReturn(Optional.of(state));
 
-        StateUpdateRequest update = new StateUpdateRequest(state.getName(),state.getCountry_id());
+        StateUpdateRequest update = new StateUpdateRequest(state.getName());
 
         //When
         assertThatThrownBy(()->underTest.updateState(id,update))

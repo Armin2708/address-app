@@ -35,8 +35,8 @@ public class CountryService {
 
 
     public void addCountry(CountryRegistrationRequest request) {
-        String name = request.name();
-        String id = request.id();
+        String name = request.countryName();
+        String id = request.countryId();
 
         // Check if the country name already exists
         if (countryDao.existCountryWithName(name)) {
@@ -68,12 +68,12 @@ public class CountryService {
                 ));
         boolean changes = false;
 
-        if (countryUpdateRequest.name() != null && !countryUpdateRequest.name().equals(country.getName())) {
+        if (countryUpdateRequest.countryName() != null && !countryUpdateRequest.countryName().equals(country.getName())) {
             // Check if the new name is already taken
-            if (countryDao.existCountryWithName(countryUpdateRequest.name())) {
+            if (countryDao.existCountryWithName(countryUpdateRequest.countryName())) {
                 throw new DuplicateResourceException("name already taken");
             }
-            country.setName(countryUpdateRequest.name());
+            country.setName(countryUpdateRequest.countryName());
             changes = true;
         }
 

@@ -1,6 +1,5 @@
 package com.project.adress.property;
 
-import com.project.adress.city.*;
 import com.project.adress.exception.DuplicateResourceException;
 import com.project.adress.exception.RequestValidationException;
 import com.project.adress.exception.ResourceNotFoundException;
@@ -21,41 +20,43 @@ import static org.mockito.Mockito.*;
 class PropertyServiceTest {
 
     @Mock
-    private CityDao cityDao;
-    CityService underTest;
+    private PropertyDao propertyDao;
+    PropertyService underTest;
 
     @BeforeEach
     void setUp() {
-        underTest=new CityService(cityDao);
+        underTest=new PropertyService(propertyDao);
     }
 
     @Test
-    void getAllCities() {
+    void getAllProperties() {
 
         //Given
+        Integer streetId=1000;
 
         //When
-        underTest.getAllCities();
+        underTest.getAllProperties(streetId);
 
         //Then
-        verify(cityDao).selectAllCities();
+        verify(propertyDao).selectAllProperties(streetId);
     }
 
     @Test
-    void canGetCity() {
+    void canGetProperty() {
 
         //Given
-        int id=100;
-        City city = new City(id,
+        Integer streetId=1000;
+        int id=10000;
+        Property Property = new Property(id,
                 "Test1",
-                10);
-        when(cityDao.selectCityById(id)).thenReturn(Optional.of(city));
+                streetId);
+        when(propertyDao.selectPropertyById(id)).thenReturn(Optional.of(Property));
 
         //When
-        City actual = underTest.getCity(id);
+        Property actual = underTest.getProperty(id);
 
         //Then
-        assertThat(actual).isEqualTo(city);
+        assertThat(actual).isEqualTo(Property);
 
     }
 
@@ -64,283 +65,283 @@ class PropertyServiceTest {
         //Given
         int id = -1;
 
-        when(cityDao.selectCityById(id)).thenReturn(Optional.empty());
+        when(propertyDao.selectPropertyById(id)).thenReturn(Optional.empty());
 
         //When
 
         //Then
-        assertThatThrownBy(() -> underTest.getCity(id))
+        assertThatThrownBy(() -> underTest.getProperty(id))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("city with id [%s] not found".formatted(id));
+                .hasMessage("property with id [%s] not found".formatted(id));
 
     }
 
     @Test
     void willThrowWhenForeignKeyNotFound(){
         //Given
-        Integer stateId=10;
+        Integer streetId=1000;
 
-        when(cityDao.existStateWithStateId(stateId)).thenReturn(false);
-        CityRegistrationRequest cityRegistrationRequest= new CityRegistrationRequest(200,"Test2",10);
-        City city = new City(
-                200,
+        when(propertyDao.existStreetWithStreetId(streetId)).thenReturn(false);
+        PropertyRegistrationRequest PropertyRegistrationRequest= new PropertyRegistrationRequest(20000,"Test2",1000);
+        Property Property = new Property(
+                20000,
                 "Test2",
-                10);
+                streetId);
         //When
-        assertThatThrownBy(() ->underTest.addCity(cityRegistrationRequest))
+        assertThatThrownBy(() ->underTest.addProperty(PropertyRegistrationRequest))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("state id does not exist");
+                .hasMessage("street id does not exist");
 
         //Then
-        verify(cityDao,never()).insertCity(city);
+        verify(propertyDao,never()).insertProperty(Property);
 
     }
 
     @Test
-    void addCity() {
+    void addProperty() {
 
         //Given
-        Integer id=300;
-        Integer state_id = 10;
-        when(cityDao.existStateWithStateId(state_id)).thenReturn(true);
-        CityRegistrationRequest city = new CityRegistrationRequest(id,"Test3",state_id);
+        Integer id=30000;
+        Integer streetId=1000;
+        when(propertyDao.existStreetWithStreetId(streetId)).thenReturn(true);
+        PropertyRegistrationRequest Property = new PropertyRegistrationRequest(id,"Test3",streetId);
 
         //When
-        underTest.addCity(city);
+        underTest.addProperty(Property);
 
         //Then
-        ArgumentCaptor<City> cityArgumentCaptor = ArgumentCaptor.forClass(
-                City.class
+        ArgumentCaptor<Property> PropertyArgumentCaptor = ArgumentCaptor.forClass(
+                Property.class
         );
-        verify(cityDao).insertCity(cityArgumentCaptor.capture());
+        verify(propertyDao).insertProperty(PropertyArgumentCaptor.capture());
 
-        City capturedCity = cityArgumentCaptor.getValue();
+        Property capturedProperty = PropertyArgumentCaptor.getValue();
 
-        assertThat(capturedCity.getCity_id()).isEqualTo(300);
-        assertThat(capturedCity.getName()).isEqualTo("Test3");
-        assertThat(capturedCity.getState_id()).isEqualTo(10);
+        assertThat(capturedProperty.getProperty_id()).isEqualTo(30000);
+        assertThat(capturedProperty.getProperty_number()).isEqualTo("Test3");
+        assertThat(capturedProperty.getStreet_id()).isEqualTo(streetId);
 
     }
 
     @Test
-    void willThrowWhenCityIdExistsAlready() {
+    void willThrowWhenPropertyIdExistsAlready() {
 
         //Given
-        Integer id=400;
-        when(cityDao.existCityById(id)).thenReturn(true);
-        Integer state_id = 10;
-        CityRegistrationRequest city = new CityRegistrationRequest(id,"Test4",state_id);
+        Integer id=40000;
+        when(propertyDao.existPropertyById(id)).thenReturn(true);
+        Integer streetId=1000;
+        PropertyRegistrationRequest Property = new PropertyRegistrationRequest(id,"Test4",streetId);
 
         //When
-        assertThatThrownBy(() ->underTest.addCity(city))
+        assertThatThrownBy(() ->underTest.addProperty(Property))
                 .isInstanceOf(DuplicateResourceException.class)
-                .hasMessage("city id already taken");
+                .hasMessage("property id already taken");
 
         //Then
 
-        verify(cityDao, never()).insertCity(any());
+        verify(propertyDao, never()).insertProperty(any());
     }
 
     @Test
-    void willThrowWhenCityNameExistsAlready() {
+    void willThrowWhenPropertyNameExistsAlready() {
 
         //Given
         String name ="Test5";
-        when(cityDao.existCityWithName(name)).thenReturn(true);
-        Integer state_id = 10;
-        CityRegistrationRequest city = new CityRegistrationRequest(500,name,state_id);
+        when(propertyDao.existPropertyWithNumber(name)).thenReturn(true);
+        Integer streetId=1000;
+        PropertyRegistrationRequest Property = new PropertyRegistrationRequest(50000,name,streetId);
 
         //When
-        assertThatThrownBy(() ->underTest.addCity(city))
+        assertThatThrownBy(() ->underTest.addProperty(Property))
                 .isInstanceOf(DuplicateResourceException.class)
-                .hasMessage("city name already taken");
+                .hasMessage("property name already taken");
 
         //Then
 
-        verify(cityDao, never()).insertCity(any());
+        verify(propertyDao, never()).insertProperty(any());
     }
 
     @Test
-    void deleteCity() {
+    void deleteProperty() {
 
         //Given
         int id = 600;
 
-        when(cityDao.existCityById(id)).thenReturn(true);
+        when(propertyDao.existPropertyById(id)).thenReturn(true);
 
         //When
-        underTest.deleteCity(id);
+        underTest.deleteProperty(id);
 
         //Then
-        verify(cityDao).deleteCityById(id);
+        verify(propertyDao).deletePropertyById(id);
 
     }
 
     @Test
-    void willThrowWhenDeleteCityIdNotExists() {
+    void willThrowWhenDeletePropertyIdNotExists() {
 
         //Given
         int id = -1;
 
-        when(cityDao.existCityById(id)).thenReturn(false);
+        when(propertyDao.existPropertyById(id)).thenReturn(false);
 
         //When
 
-        assertThatThrownBy(() -> underTest.deleteCity(id))
+        assertThatThrownBy(() -> underTest.deleteProperty(id))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("city with id [%s] not found".formatted(id));
+                .hasMessage("property with id [%s] not found".formatted(id));
 
         //Then
-        verify(cityDao,never()).deleteCityById(id);
+        verify(propertyDao,never()).deletePropertyById(id);
     }
 
     @Test
-    void canUpdateAllCityProperties() {
+    void canUpdateAllPropertyProperties() {
 
         //Given
-        int id = 700;
-        City city = new City(id,"Test7",10);
-        when(cityDao.selectCityById(id)).thenReturn(Optional.of(city));
+        int id = 70000;
+        Property Property = new Property(id,"Test7",1000);
+        when(propertyDao.selectPropertyById(id)).thenReturn(Optional.of(Property));
 
         String newName = "Updated1";
-        Integer newStateId = 20;
-        when(cityDao.existStateWithStateId(newStateId)).thenReturn(true);
+        Integer newStreetId=2000;
+        when(propertyDao.existStreetWithStreetId(newStreetId)).thenReturn(true);
 
-        CityUpdateRequest update = new CityUpdateRequest(newName,newStateId);
+        PropertyUpdateRequest update = new PropertyUpdateRequest(newName,newStreetId);
 
-        when(cityDao.existCityWithName(newName)).thenReturn(false);
+        when(propertyDao.existPropertyWithNumber(newName)).thenReturn(false);
 
         //When
-        underTest.updateCity(id,update);
+        underTest.updateProperty(id,update);
 
         //Then
-        ArgumentCaptor<City> cityArgumentCaptor = ArgumentCaptor.forClass(City.class);
+        ArgumentCaptor<Property> PropertyArgumentCaptor = ArgumentCaptor.forClass(Property.class);
 
-        verify(cityDao).updateCity(cityArgumentCaptor.capture());
-        City capturedCity = cityArgumentCaptor.getValue();
+        verify(propertyDao).updateProperty(PropertyArgumentCaptor.capture());
+        Property capturedProperty = PropertyArgumentCaptor.getValue();
 
-        assertThat(capturedCity.getName()).isEqualTo(update.name());
-        assertThat(capturedCity.getState_id()).isEqualTo(update.state_id());
+        assertThat(capturedProperty.getProperty_number()).isEqualTo(update.property_number());
+        assertThat(capturedProperty.getStreet_id()).isEqualTo(update.street_id());
 
     }
 
     @Test
-    void canOnlyUpdateCityName() {
+    void canOnlyUpdatePropertyName() {
 
         //Given
-        int id = 800;
-        City city = new City(id,"Test8",10);
-        when(cityDao.selectCityById(id)).thenReturn(Optional.of(city));
+        int id = 80000;
+        Property Property = new Property(id,"Test8",1000);
+        when(propertyDao.selectPropertyById(id)).thenReturn(Optional.of(Property));
 
         String newName = "Updated2";
 
-        CityUpdateRequest update = new CityUpdateRequest(newName,null);
+        PropertyUpdateRequest update = new PropertyUpdateRequest(newName,null);
 
-        when(cityDao.existCityWithName(newName)).thenReturn(false);
+        when(propertyDao.existPropertyWithNumber(newName)).thenReturn(false);
 
         //When
-        underTest.updateCity(id,update);
+        underTest.updateProperty(id,update);
 
         //Then
-        ArgumentCaptor<City> cityArgumentCaptor = ArgumentCaptor.forClass(City.class);
+        ArgumentCaptor<Property> PropertyArgumentCaptor = ArgumentCaptor.forClass(Property.class);
 
-        verify(cityDao).updateCity(cityArgumentCaptor.capture());
-        City capturedCity = cityArgumentCaptor.getValue();
+        verify(propertyDao).updateProperty(PropertyArgumentCaptor.capture());
+        Property capturedProperty = PropertyArgumentCaptor.getValue();
 
-        assertThat(capturedCity.getName()).isEqualTo(update.name());
-        assertThat(capturedCity.getState_id()).isEqualTo(city.getState_id());
+        assertThat(capturedProperty.getProperty_number()).isEqualTo(update.property_number());
+        assertThat(capturedProperty.getStreet_id()).isEqualTo(Property.getStreet_id());
 
     }
 
     @Test
-    void canOnlyUpdateCityStateId() {
+    void canOnlyUpdatePropertyStreetId() {
 
         //Given
-        int id = 900;
-        City city = new City(id,"Test9",10);
-        when(cityDao.selectCityById(id)).thenReturn(Optional.of(city));
+        int id = 90000;
+        Property Property = new Property(id,"Test9",1000);
+        when(propertyDao.selectPropertyById(id)).thenReturn(Optional.of(Property));
 
-        Integer newStateId = 20;
-        when(cityDao.existStateWithStateId(newStateId)).thenReturn(true);
+        Integer newStreetId = 2000;
+        when(propertyDao.existStreetWithStreetId(newStreetId)).thenReturn(true);
 
-        CityUpdateRequest update = new CityUpdateRequest(null,newStateId);
+        PropertyUpdateRequest update = new PropertyUpdateRequest(null,newStreetId);
 
         //When
-        underTest.updateCity(id,update);
+        underTest.updateProperty(id,update);
 
         //Then
-        ArgumentCaptor<City> cityArgumentCaptor = ArgumentCaptor.forClass(City.class);
+        ArgumentCaptor<Property> PropertyArgumentCaptor = ArgumentCaptor.forClass(Property.class);
 
-        verify(cityDao).updateCity(cityArgumentCaptor.capture());
-        City capturedCity = cityArgumentCaptor.getValue();
+        verify(propertyDao).updateProperty(PropertyArgumentCaptor.capture());
+        Property capturedProperty = PropertyArgumentCaptor.getValue();
 
-        assertThat(capturedCity.getName()).isEqualTo(city.getName());
-        assertThat(capturedCity.getState_id()).isEqualTo(update.state_id());
+        assertThat(capturedProperty.getProperty_number()).isEqualTo(Property.getProperty_number());
+        assertThat(capturedProperty.getStreet_id()).isEqualTo(update.street_id());
 
     }
 
     @Test
-    void willThrowUpdateWhenCityNameAlreadyTaken(){
+    void willThrowUpdateWhenPropertyNameAlreadyTaken(){
         //Given
-        int id = 1000;
-        City city = new City(id,"Test10",10);
-        when(cityDao.selectCityById(id)).thenReturn(Optional.of(city));
+        int id = 100000;
+        Property Property = new Property(id,"Test10",1000);
+        when(propertyDao.selectPropertyById(id)).thenReturn(Optional.of(Property));
 
         String newName = "Updated3";
-        when(cityDao.existCityWithName(newName)).thenReturn(true);
+        when(propertyDao.existPropertyWithNumber(newName)).thenReturn(true);
 
-        CityUpdateRequest update = new CityUpdateRequest(newName,null);
+        PropertyUpdateRequest update = new PropertyUpdateRequest(newName,null);
 
         //When
-        assertThatThrownBy(()->underTest.updateCity(id,update))
+        assertThatThrownBy(()->underTest.updateProperty(id,update))
                 .isInstanceOf(DuplicateResourceException.class)
-                .hasMessage("city name already taken");
+                .hasMessage("property name already taken");
 
         //Then
-        verify(cityDao,never()).updateCity(any());
+        verify(propertyDao,never()).updateProperty(any());
 
     }
 
     @Test
-    void willThrowUpdateWhenStateIdNotExists(){
+    void willThrowUpdateWhenStreetIdNotExists(){
         //Given
-        int id = 1100;
+        int id = 110000;
 
-        City city = new City(id,"Test11",10);
-        when(cityDao.selectCityById(id)).thenReturn(Optional.of(city));
+        Property Property = new Property(id,"Test11",1000);
+        when(propertyDao.selectPropertyById(id)).thenReturn(Optional.of(Property));
 
-        Integer newStateId = -1;
-        when(cityDao.existStateWithStateId(newStateId)).thenReturn(false);
+        Integer newStreetId = -1;
+        when(propertyDao.existStreetWithStreetId(newStreetId)).thenReturn(false);
 
-        CityUpdateRequest update = new CityUpdateRequest(null,newStateId);
+        PropertyUpdateRequest update = new PropertyUpdateRequest(null,newStreetId);
 
         //When
-        assertThatThrownBy(()->underTest.updateCity(id,update))
+        assertThatThrownBy(()->underTest.updateProperty(id,update))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("state with id [%s] not found");
+                .hasMessage("street with id [%s] not found");
 
         //Then
-        verify(cityDao,never()).updateCity(any());
+        verify(propertyDao,never()).updateProperty(any());
 
     }
 
     @Test
     void willThrowUpdateWhenNoChanges(){
         //Given
-        int id = 1200;
+        int id = 120000;
 
-        City city = new City(id,"Test12",10);
-        when(cityDao.selectCityById(id)).thenReturn(Optional.of(city));
+        Property Property = new Property(id,"Test12",1000);
+        when(propertyDao.selectPropertyById(id)).thenReturn(Optional.of(Property));
 
-        CityUpdateRequest update = new CityUpdateRequest(city.getName(),city.getState_id());
+        PropertyUpdateRequest update = new PropertyUpdateRequest(Property.getProperty_number(),Property.getStreet_id());
 
         //When
-        assertThatThrownBy(()->underTest.updateCity(id,update))
+        assertThatThrownBy(()->underTest.updateProperty(id,update))
                 .isInstanceOf(RequestValidationException.class)
                 .hasMessage("no data changes found");
 
         //Then
-        verify(cityDao,never()).updateCity(any());
+        verify(propertyDao,never()).updateProperty(any());
 
     }
 }

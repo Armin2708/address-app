@@ -16,7 +16,7 @@ public class CityService {
     public CityService(@Qualifier("Cityjdbc") CityDao cityDao){
         this.cityDao = cityDao;
     }
-    public List<City> getAllCities(){return cityDao.selectAllCities();}
+    public List<City> getAllCities(Integer stateId){return cityDao.selectAllCities(stateId);}
 
     public City getCity(Integer id){
         return cityDao.selectCityById(id)
@@ -24,22 +24,22 @@ public class CityService {
     }
 
     public void addCity(CityRegistrationRequest cityRegistrationRequest){
-        String name = cityRegistrationRequest.name();
-        Integer id = cityRegistrationRequest.city_id();
+        String name = cityRegistrationRequest.cityName();
+        Integer id = cityRegistrationRequest.cityId();
         if (cityDao.existCityById(id)){
             throw new DuplicateResourceException("city id already taken");
         }
         if (cityDao.existCityWithName(name)){
             throw new DuplicateResourceException("city name already taken");
         }
-        Integer stateId = cityRegistrationRequest.state_id();
+        Integer stateId = cityRegistrationRequest.stateId();
         if (cityDao.existStateWithStateId(stateId)==false){
             throw new ResourceNotFoundException("state id does not exist");
         }
         City city = new City(
-                cityRegistrationRequest.city_id(),
-                cityRegistrationRequest.name(),
-                cityRegistrationRequest.state_id()
+                cityRegistrationRequest.cityId(),
+                cityRegistrationRequest.cityName(),
+                cityRegistrationRequest.stateId()
         );
         cityDao.insertCity(city);
     }
@@ -66,13 +66,6 @@ public class CityService {
             changes=true;
         }
 
-        if (cityUpdateRequest.state_id()!=null && !cityUpdateRequest.state_id().equals(city.getState_id())) {
-            if (cityDao.existStateWithStateId(cityUpdateRequest.state_id())==false){
-                throw new ResourceNotFoundException("state with id [%s] not found");
-            }
-            city.setState_id(cityUpdateRequest.state_id());
-            changes=true;
-        }
 
         if(!changes) {
             throw new RequestValidationException("no data changes found");

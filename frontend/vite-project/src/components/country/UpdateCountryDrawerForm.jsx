@@ -14,7 +14,7 @@ import UpdateCountryForm from "./UpdateCountryForm.jsx";
 
 const CloseIcon = () => "x";
 
-const UpdateCountryDrawerForm = ({ fetchCountries, name, id }) => {
+const UpdateCountryDrawerForm = ({ fetchCountries, countryName, countryId }) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     return <>
         <Button
@@ -38,8 +38,8 @@ const UpdateCountryDrawerForm = ({ fetchCountries, name, id }) => {
                 <DrawerBody>
                     <UpdateCountryForm
                         fetchCountries={fetchCountries}
-                        initialValues={{name,id}}
-                        id={id}
+                        initialValues={{countryName,countryId}}
+                        countryId={countryId}
                     />
                 </DrawerBody>
 

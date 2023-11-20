@@ -26,7 +26,7 @@ Create Table streets(
 );
 Create Table properties(
                          property_id BIGSERIAL,
-                         property_number TEXT NOT NULL,
+                         name TEXT NOT NULL,
                          street_id BIGSERIAL,
                          primary key (property_id),
                          foreign key (street_id) references streets(street_id) ON DELETE CASCADE

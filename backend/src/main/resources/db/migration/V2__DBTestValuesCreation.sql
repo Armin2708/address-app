@@ -15,5 +15,5 @@ INSERT INTO streets(street_id, name,city_id) VALUES (1000,'StreetTest1',100);
 INSERT INTO streets(street_id, name,city_id) VALUES (2000, 'StreetTest2',200);
 
 --Properties
-INSERT INTO properties(property_id, property_number,street_id) VALUES (10000,'PropertyTest1',1000);
-INSERT INTO properties(property_id, property_number,street_id) VALUES (20000, 'PropertyTest2',2000);
+INSERT INTO properties(property_id, name,street_id) VALUES (10000,'PropertyTest1',1000);
+INSERT INTO properties(property_id, name,street_id) VALUES (20000, 'PropertyTest2',2000);

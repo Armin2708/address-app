@@ -1,7 +1,7 @@
 import {Form, Formik, useField} from 'formik';
 import * as Yup from 'yup';
 import {Alert, AlertIcon, Box, Button, FormLabel, Input, Select, Stack} from "@chakra-ui/react";
-import {updateCountry} from "../../services/client.js";
+import {updateCountry} from "../../services/countryClient.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 
 
@@ -23,25 +23,25 @@ const MyTextInput = ({label, ...props}) => {
 };
 
 // And now we can use these
-const UpdateCountryForm = ({ fetchCountries, initialValues, id }) => {
+const UpdateCountryForm = ({ fetchCountries, initialValues, countryId }) => {
     return (
         <>
             <Formik
                 initialValues={initialValues}
                 validationSchema={Yup.object({
-                    name: Yup.string()
+                    countryName: Yup.string()
                         .max(15, 'Must be 15 characters or less')
                         .required('Required'),
 
                 })}
                 onSubmit={(updatedCountry, {setSubmitting}) => {
                     setSubmitting(true);
-                    updateCountry(id, updatedCountry)
+                    updateCountry(countryId, updatedCountry)
                         .then(res => {
                             console.log(res);
                             successNotification(
                                 "Country updated",
-                                `${updatedCountry.name} was successfully updated`
+                                `${updatedCountry.countryName} was successfully updated`
                             )
                             fetchCountries();
                         }).catch(err => {
@@ -60,9 +60,9 @@ const UpdateCountryForm = ({ fetchCountries, initialValues, id }) => {
                         <Stack spacing={"24px"}>
                             <MyTextInput
                                 label="Name"
-                                name="name"
+                                name="countryName"
                                 type="text"
-                                placeholder={initialValues.name}
+                                placeholder={initialValues.countryName}
                             />
 
                             <Button disabled={!(isValid && dirty) || isSubmitting} type="submit">Submit</Button>

@@ -16,7 +16,7 @@ public class StateService {
     public StateService(@Qualifier("Statejdbc") StateDao stateDao){
         this.stateDao = stateDao;
     }
-    public List<State> getAllStates(){return stateDao.selectAllStates();}
+    public List<State> getAllStates(String countryId){return stateDao.selectAllStates(countryId);}
 
     public State getState(Integer id){
         return stateDao.selectStateById(id)
@@ -24,22 +24,22 @@ public class StateService {
     }
 
     public void addState(StateRegistrationRequest stateRegistrationRequest){
-        String name = stateRegistrationRequest.name();
-        Integer id = stateRegistrationRequest.state_id();
+        String name = stateRegistrationRequest.stateName();
+        Integer id = stateRegistrationRequest.stateId();
         if (stateDao.existStateById(id)){
             throw new DuplicateResourceException("state id already taken");
         }
         if (stateDao.existStateWithName(name)){
             throw new DuplicateResourceException("state name already taken");
         }
-        String countryId = stateRegistrationRequest.country_id();
+        String countryId = stateRegistrationRequest.countryId();
         if (stateDao.existCountryWithCountryId(countryId)==false){
-            throw new ResourceNotFoundException("country id does not exist");
+            throw new ResourceNotFoundException("country id "+countryId+" does not exist");
         }
         State state = new State(
-                stateRegistrationRequest.state_id(),
-                stateRegistrationRequest.name(),
-                stateRegistrationRequest.country_id()
+                stateRegistrationRequest.stateId(),
+                stateRegistrationRequest.stateName(),
+                stateRegistrationRequest.countryId()
         );
         stateDao.insertState(state);
     }
@@ -63,14 +63,6 @@ public class StateService {
                 throw new DuplicateResourceException("state name already taken");
             }
             state.setName(stateUpdateRequest.name());
-            changes=true;
-        }
-
-        if (stateUpdateRequest.country_id()!=null && !stateUpdateRequest.country_id().equals(state.getCountry_id())) {
-            if (stateDao.existCountryWithCountryId(stateUpdateRequest.country_id())==false){
-                throw new ResourceNotFoundException("country with id [%s] not found");
-            }
-            state.setCountry_id(stateUpdateRequest.country_id());
             changes=true;
         }
 

@@ -32,12 +32,13 @@ class StreetServiceTest {
     void getAllStreets() {
 
         //Given
+        Integer cityId=100;
 
         //When
-        underTest.getAllStreets();
+        underTest.getAllStreets(cityId);
 
         //Then
-        verify(streetDao).selectAllStreets();
+        verify(streetDao).selectAllStreets(cityId);
     }
 
     @Test

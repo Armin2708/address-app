@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface CityDao {
 
-    List<City> selectAllCities();
+    List<City> selectAllCities(Integer stateId);
     Optional<City> selectCityById(Integer id);
     void insertCity(City city);
     void deleteCityById(Integer id);

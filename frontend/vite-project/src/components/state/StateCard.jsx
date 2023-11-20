@@ -8,13 +8,15 @@ import {
     Text,
     Stack,
     Tag,
-    useColorModeValue,
+    useColorModeValue, Button,
 } from '@chakra-ui/react';
-import DeleteDrawerForm from "../country/DeleteCountryDrawerPopUp.jsx";
-import UpdateCountryDrawerForm from "../country/UpdateCountryDrawerForm.jsx";
+import DeleteStateDrawerPopUp from "./DeleteStateDrawerPopUp";
+import UpdateStateDrawerForm from "./UpdateStateDrawerForm.jsx";
+import {Link} from "react-router-dom";
+import {setCountryId, setStateId} from "../shared/IdStorage.jsx";
 
-export default function CardWithImage({id,name,fetchStates}) {
-    const nameLowerCase=name.toLowerCase();
+export default function StateCardWithImage({stateId,stateName,fetchStates}) {
+    const nameLowerCase=stateName.toLowerCase();
     return (
         <Center py={6}>
             <Box
@@ -46,28 +48,34 @@ export default function CardWithImage({id,name,fetchStates}) {
 
                 <Box p={6}>
                     <Stack spacing={2} align={'center'} mb={5}>
-                        <Tag borderRadius={"full"}>{id}</Tag>
+                        <Tag borderRadius={"full"}>{stateId}</Tag>
                         <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
-                            {name}
+                            {stateName}
                         </Heading>
 
                     </Stack>
 
                     <Stack direction={'row'} justify={'center'} spacing={6} p={4}>
                         <Stack>
-                            <UpdateCountryDrawerForm
-                                id={id}
-                                name={name}
+                            <UpdateStateDrawerForm
+                                stateId={stateId}
+                                stateName={stateName}
                                 fetchStates={fetchStates}
                             />
                         </Stack>
                         <Stack>
-                            <DeleteDrawerForm
-                                id={id}
-                                name={name}
+                            <DeleteStateDrawerPopUp
+                                stateId={stateId}
+                                stateName={stateName}
+                                fetchStates={fetchStates}
                             />
                         </Stack>
                     </Stack>
+                    <Box display='flex' justifyContent='center' width='100%' py={12} mb={2}>
+                        <Link to={`/countries/${stateId}/cities`}>
+                            <Button colorScheme='yellow'onClick={() => setStateId(stateId)}>Cities</Button>
+                        </Link>
+                    </Box>
                 </Box>
             </Box>
         </Center>

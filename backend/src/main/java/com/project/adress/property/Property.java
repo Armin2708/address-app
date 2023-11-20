@@ -5,11 +5,11 @@ import java.util.Objects;
 public class Property {
 
     private Integer property_id;
-    private String property_number;
+    private String name;
     private Integer street_id;
 
-   public Property(Integer property_id, String property_number, Integer street_id){
-       this.property_number=property_number;
+   public Property(Integer property_id, String name, Integer street_id){
+       this.name=name;
        this.street_id = street_id;
        this.property_id = property_id;
    }
@@ -24,12 +24,12 @@ public class Property {
         this.property_id = property_id;
     }
 
-    public String getProperty_number() {
-        return property_number;
+    public String getName() {
+        return name;
     }
 
-    public void setProperty_number(String property_number) {
-        this.property_number = property_number;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getStreet_id() {
@@ -45,19 +45,19 @@ public class Property {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Property property = (Property) o;
-        return Objects.equals(street_id, property.street_id) && Objects.equals(property_number, property.property_number)&& Objects.equals(property_id, property.property_id);
+        return Objects.equals(street_id, property.street_id) && Objects.equals(name, property.name)&& Objects.equals(property_id, property.property_id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(property_id, property_number, street_id);
+        return Objects.hash(property_id, name, street_id);
     }
 
     @Override
     public String toString() {
         return "Customer{" +
                 "id=" + property_id +
-                ", number='" + property_number + '\'' +
+                ", name='" + name + '\'' +
                 ", streetKey=" + street_id + '\'' +
                 '}';
     }

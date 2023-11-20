@@ -29,15 +29,16 @@ class StreetJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void selectAllStreets() {
         //Given
+        Integer cityId=100;
         Street street = new Street(
                 1111,
                 "Tested1",
-                100
+                cityId
         );
         underTest.insertStreet(street);
 
         //When
-        List<Street> actual = underTest.selectAllStreets();
+        List<Street> actual = underTest.selectAllStreets(cityId);
 
         //Then
         assertThat(actual).isNotEmpty();
@@ -47,15 +48,16 @@ class StreetJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void selectStreetById() {
         //Given
+        Integer cityId=100;
         String name = "Tested2";
         Street street = new Street(
                 2222,
                 name,
-                100
+                cityId
         );
         underTest.insertStreet(street);
 
-        int id = underTest.selectAllStreets()
+        int id = underTest.selectAllStreets(cityId)
                 .stream()
                 .filter(c -> c.getName().equals(name))
                 .map(Street::getStreet_id)
@@ -94,11 +96,12 @@ class StreetJDBCAccessServiceTest extends AbstractTestContainer {
     void existsStreetWithName(){
 
         //Given
+        Integer cityId=100;
         String name = "Tested3";
         Street street = new Street(
                 3000,
                 name,
-                100
+                cityId
         );
         underTest.insertStreet(street);
 
@@ -125,15 +128,16 @@ class StreetJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void existStreetById() {
         //Given
+        Integer cityId=100;
         String name = "Tested4";
         Street street = new Street(
                 4000,
                 name,
-                100
+                cityId
         );
         underTest.insertStreet(street);
 
-        int id = underTest.selectAllStreets()
+        int id = underTest.selectAllStreets(cityId)
                 .stream()
                 .filter(c -> c.getName().equals(name))
                 .map(Street::getStreet_id)
@@ -165,15 +169,16 @@ class StreetJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void deleteStreetById() {
         //Given
+        Integer cityId=100;
         String name = "Tested5";
         Street street = new Street(
                 5000,
                 name,
-                100
+                cityId
         );
         underTest.insertStreet(street);
 
-        int id = underTest.selectAllStreets()
+        int id = underTest.selectAllStreets(cityId)
                 .stream()
                 .filter(c -> c.getName().equals(name))
                 .map(Street::getStreet_id)
@@ -217,15 +222,16 @@ class StreetJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void updateStreetName() {
         //Given
+        Integer cityId=100;
         String name = "Tested6";
         Street street = new Street(
                 6000,
                 name,
-                100
+                cityId
         );
         underTest.insertStreet(street);
 
-        int id = underTest.selectAllStreets()
+        int id = underTest.selectAllStreets(cityId)
                 .stream()
                 .filter(c->c.getName().equals(name))
                 .map(Street::getStreet_id)
@@ -254,15 +260,16 @@ class StreetJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void updateStreetCityId() {
         //Given
+        Integer cityId=100;
         String name = "Tested7";
         Street street = new Street(
                 7000,
                 name,
-                100
+                cityId
         );
         underTest.insertStreet(street);
 
-        int id = underTest.selectAllStreets()
+        int id = underTest.selectAllStreets(cityId)
                 .stream()
                 .filter(c->c.getName().equals(name))
                 .map(Street::getStreet_id)
@@ -291,15 +298,16 @@ class StreetJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void updateAllStreetProperties() {
         //Given
+        Integer cityId=100;
         String name = "Tested8";
         Street street=new Street(
                 8000,
                 name,
-                100
+                cityId
         );
         underTest.insertStreet(street);
 
-        int id = underTest.selectAllStreets()
+        int id = underTest.selectAllStreets(cityId)
                 .stream()
                 .filter(c -> c.getName().equals(name))
                 .map(Street::getStreet_id)
@@ -330,15 +338,16 @@ class StreetJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void willNotUpdateWhenNoUpdate() {
         //Given
+        Integer cityId=100;
         String name = "Tested9";
         Street street=new Street(
                 9000,
                 name,
-                100
+                cityId
         );
         underTest.insertStreet(street);
 
-        int id = underTest.selectAllStreets()
+        int id = underTest.selectAllStreets(cityId)
                 .stream()
                 .filter(c -> c.getName().equals(name))
                 .map(Street::getStreet_id)

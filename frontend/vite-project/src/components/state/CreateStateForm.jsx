@@ -1,8 +1,9 @@
 import {Form, Formik, useField} from 'formik';
 import * as Yup from 'yup';
 import {Alert, AlertIcon, Box, Button, FormLabel, Input, Select, Stack} from "@chakra-ui/react";
-import {saveState} from "../../services/client.js";
+import {saveState} from "../../services/stateClient.js";
 import {successNotification, errorNotification} from "../../services/notification.js";
+import {useParams} from "react-router-dom";
 
 const MyTextInput = ({label, ...props}) => {
    const [field, meta] = useField(props);
@@ -22,29 +23,32 @@ const MyTextInput = ({label, ...props}) => {
 
 // And now we can use these
 const CreateStateForm = ({ fetchStates }) => {
+    const { countryId } = useParams();
     return (
         <>
             <Formik
                 initialValues={{
-                    name: '',
-                    id: ''
+                    stateName: '',
+                    stateId: '',
+                    countryId:''
                 }}
                 validationSchema={Yup.object({
-                    name: Yup.string()
-                        .max(15, 'Must be 15 characters or less')
+                    stateName: Yup.string()
+                        .max(30, 'Must be 15 characters or less')
                         .required('Required'),
-                    id: Yup.number()
-                        .max(3, 'Must be 3 numbers or less')
-                        .required('Required')
+                    stateId: Yup.number()
+                        .required()
+                        .min(1, 'must be more than 1')
+                        .max(99, 'must be less than 99')
                 })}
                 onSubmit={(state, {setSubmitting}) => {
                     setSubmitting(true);
-                    saveState(state)
+                    saveState(countryId,state)
                         .then(res => {
                             console.log(res);
                             successNotification(
                                 "State saved",
-                                `${state.name} was successfully saved`
+                                `${state.name} was successfully saved with id ${state.id}`
                             )
                             fetchStates();
                         }).catch(err => {
@@ -63,16 +67,16 @@ const CreateStateForm = ({ fetchStates }) => {
                         <Stack spacing={"24px"}>
                             <MyTextInput
                                 label="Name"
-                                name="name"
+                                name="stateName"
                                 type="text"
                                 placeholder="California"
                             />
 
                             <MyTextInput
                                 label="Id"
-                                name="id"
+                                name="stateId"
                                 type="number"
-                                placeholder="90"
+                                placeholder="75"
                             />
 
 

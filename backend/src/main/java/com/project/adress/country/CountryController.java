@@ -19,12 +19,6 @@ public class CountryController {
     public Country getCountryById(@PathVariable("countryId") String countryId){
         return countryService.getCountryById(countryId);
     }
-
-    @GetMapping("{name}")
-    public Country getCountryByName(@PathVariable("name") String name){
-        return countryService.getCountryByName(name);
-    }
-
     @PostMapping
     public void registerCountry(@RequestBody CountryRegistrationRequest request){
         countryService.addCountry(request);
@@ -38,9 +32,9 @@ public class CountryController {
 
     @PutMapping("{countryId}")
     public void updateCountry(
-            @PathVariable("countryId") String id,
+            @PathVariable("countryId") String countryId,
             @RequestBody CountryUpdateRequest request){
-        countryService.updateCountry(id,request);
+        countryService.updateCountry(countryId,request);
     }
 }
 

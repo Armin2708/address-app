@@ -18,12 +18,14 @@ public class CityJDBCAccessService implements CityDao {
     }
 
     @Override
-    public List<City> selectAllCities() {
+    public List<City> selectAllCities(Integer stateId) {
         var sql = """
                  SELECT state_id,name,city_id
                  FROM cities
+                 WHERE state_id=?
                  """;
-        return jdbcTemplate.query(sql, cityRowMapper);
+
+        return jdbcTemplate.query(sql, cityRowMapper,stateId);
     }
 
     @Override

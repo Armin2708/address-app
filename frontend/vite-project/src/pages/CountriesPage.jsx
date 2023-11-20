@@ -1,10 +1,11 @@
-import SidebarWithHeader from "./components/shared/SideBar.jsx";
+import SidebarWithHeader from "../components/shared/SideBar.jsx";
 import {useEffect, useState} from "react";
-import {getCountries} from "./services/client.js";
-import { Wrap, WrapItem, Spinner, Text } from '@chakra-ui/react'
-import CreateCountryDrawerForm from "./components/country/CreateCountryDrawerForm.jsx";
-import {errorNotification} from "./services/notification.js";
-import CardWithImage from "./components/country/CountryCard.jsx";
+import {getCountries} from "../services/countryClient.js";
+import {Wrap, WrapItem, Spinner, Text, Button} from '@chakra-ui/react'
+import CreateCountryDrawerForm from "../components/country/CreateCountryDrawerForm.jsx";
+import {errorNotification} from "../services/notification.js";
+import {Link} from "react-router-dom";
+import CountryCardWithImage from "../components/country/CountryCard.jsx";
 
 
 const MainPage = () =>{
@@ -51,6 +52,9 @@ const MainPage = () =>{
     if(err){
         return (
             <SidebarWithHeader>
+                <Link to="/">
+                    <Button colorScheme='green'>Return</Button>
+                </Link>
                 <CreateCountryDrawerForm
                     fetchCountries={fetchCountries}
                 ></CreateCountryDrawerForm>
@@ -63,7 +67,12 @@ const MainPage = () =>{
     if(countries.length<=0){
         return (
             <SidebarWithHeader>
+                <Link to="/">
+                    <Button colorScheme='green'>Return</Button>
+                </Link>
                 <CreateCountryDrawerForm
+                    countryId={countries.id}
+                    countryName={countries.name}
                     fetchCountries={fetchCountries}
                     ></CreateCountryDrawerForm>
                 <Text>No Countries Available</Text>
@@ -73,14 +82,19 @@ const MainPage = () =>{
 
     return (
         <SidebarWithHeader>
+            <Link to="/">
+                <Button colorScheme='green'>Return</Button>
+            </Link>
             <CreateCountryDrawerForm
+
                 fetchCountries={fetchCountries}
             />
             <Wrap justify={"center"} spacing={"30px"}>
                 {countries.map((country,index) => (
                     <WrapItem key={index}>
-                        <CardWithImage
-                            {...country}
+                        <CountryCardWithImage
+                            countryId={country.id}
+                            countryName={country.name}
                             fetchCountries={fetchCountries}
                         />
                     </WrapItem>

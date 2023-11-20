@@ -28,15 +28,16 @@ class CityJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void selectAllCities() {
         //Given
+        Integer stateId = 10;
         City city = new City(
                 111,
                 "Tested1",
-                10
+                stateId
         );
         underTest.insertCity(city);
 
         //When
-        List<City> actual = underTest.selectAllCities();
+        List<City> actual = underTest.selectAllCities(stateId);
 
         //Then
         assertThat(actual).isNotEmpty();
@@ -46,15 +47,16 @@ class CityJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void selectCityById() {
         //Given
+        Integer stateId = 10;
         String name = "Tested2";
         City city = new City(
                 222,
                 name,
-                10
+                stateId
         );
         underTest.insertCity(city);
 
-        int id = underTest.selectAllCities()
+        int id = underTest.selectAllCities(stateId)
                 .stream()
                 .filter(c -> c.getName().equals(name))
                 .map(City::getCity_id)
@@ -124,15 +126,16 @@ class CityJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void existCityById() {
         //Given
+        Integer stateId = 10;
         String name = "Tested4";
         City city = new City(
                 400,
                 name,
-                10
+                stateId
         );
         underTest.insertCity(city);
 
-        int id = underTest.selectAllCities()
+        int id = underTest.selectAllCities(stateId)
                 .stream()
                 .filter(c -> c.getName().equals(name))
                 .map(City::getCity_id)
@@ -164,15 +167,16 @@ class CityJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void deleteCityById() {
         //Given
+        Integer stateId = 10;
         String name = "Tested5";
         City city = new City(
                 500,
                 name,
-                10
+                stateId
         );
         underTest.insertCity(city);
 
-        int id = underTest.selectAllCities()
+        int id = underTest.selectAllCities(stateId)
                 .stream()
                 .filter(c -> c.getName().equals(name))
                 .map(City::getCity_id)
@@ -216,15 +220,16 @@ class CityJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void updateCityName() {
         //Given
+        Integer stateId = 10;
         String name = "Tested6";
         City city = new City(
                 600,
                 name,
-                10
+                stateId
         );
         underTest.insertCity(city);
 
-        int id = underTest.selectAllCities()
+        int id = underTest.selectAllCities(stateId)
                 .stream()
                 .filter(c->c.getName().equals(name))
                 .map(City::getCity_id)
@@ -253,15 +258,16 @@ class CityJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void updateCityStateId() {
         //Given
+        Integer stateId = 10;
         String name = "Tested7";
         City city = new City(
                 700,
                 name,
-                10
+                stateId
         );
         underTest.insertCity(city);
 
-        int id = underTest.selectAllCities()
+        int id = underTest.selectAllCities(stateId)
                 .stream()
                 .filter(c->c.getName().equals(name))
                 .map(City::getCity_id)
@@ -290,15 +296,16 @@ class CityJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void updateAllCityProperties() {
         //Given
+        Integer stateId = 10;
         String name = "Tested8";
         City city=new City(
                 800,
                 name,
-                10
+                stateId
         );
         underTest.insertCity(city);
 
-        int id = underTest.selectAllCities()
+        int id = underTest.selectAllCities(stateId)
                 .stream()
                 .filter(c -> c.getName().equals(name))
                 .map(City::getCity_id)
@@ -329,15 +336,16 @@ class CityJDBCAccessServiceTest extends AbstractTestContainer {
     @Test
     void willNotUpdateWhenNoUpdate() {
         //Given
+        Integer stateId = 10;
         String name = "Tested9";
         City city=new City(
                 900,
                 name,
-                10
+                stateId
         );
         underTest.insertCity(city);
 
-        int id = underTest.selectAllCities()
+        int id = underTest.selectAllCities(stateId)
                 .stream()
                 .filter(c -> c.getName().equals(name))
                 .map(City::getCity_id)

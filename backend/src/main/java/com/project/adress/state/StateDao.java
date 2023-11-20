@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface StateDao {
 
-    List<State> selectAllStates();
+    List<State> selectAllStates(String countryId);
     Optional<State> selectStateById(Integer id);
     void insertState(State state);
     void deleteStateById(Integer id);

@@ -1,14 +1,12 @@
 import {Form, Formik, useField} from 'formik';
 import * as Yup from 'yup';
 import {Alert, AlertIcon, Box, Button, FormLabel, Input, Select, Stack} from "@chakra-ui/react";
-import {updateCountry} from "../../services/client.js";
+import {updateState} from "../../services/stateClient.js";
 import {errorNotification, successNotification} from "../../services/notification.js";
 
 
 const MyTextInput = ({label, ...props}) => {
-    // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
-    // which we can spread on <input>. We can use field meta to show an error
-    // message if the field is invalid and it has been touched (i.e. visited)
+
     const [field, meta] = useField(props);
     return (
         <Box>
@@ -25,27 +23,31 @@ const MyTextInput = ({label, ...props}) => {
 };
 
 // And now we can use these
-const UpdateStateForm = ({ fetchCountries, initialValues, id }) => {
+const UpdateStateForm = ({ fetchStates, stateName, stateId }) => {
     return (
         <>
             <Formik
-                initialValues={initialValues}
+                initialValues={{
+                    name: stateName
+            }}
+
                 validationSchema={Yup.object({
                     name: Yup.string()
                         .max(15, 'Must be 15 characters or less')
                         .required('Required'),
 
                 })}
-                onSubmit={(updatedCountry, {setSubmitting}) => {
+                onSubmit={(updatedState, {setSubmitting}) => {
                     setSubmitting(true);
-                    updateCountry(id, updatedCountry)
+                    console.log(updatedState.name)
+                    updateState(stateId, updatedState)
                         .then(res => {
                             console.log(res);
                             successNotification(
-                                "Country updated",
-                                `${updatedCountry.name} was successfully updated`
+                                "State updated",
+                                `${updatedState.name} was successfully updated with id ${updatedState.stateId}`
                             )
-                            fetchCountries();
+                            fetchStates();
                         }).catch(err => {
                         console.log(err);
                         errorNotification(
@@ -64,7 +66,7 @@ const UpdateStateForm = ({ fetchCountries, initialValues, id }) => {
                                 label="Name"
                                 name="name"
                                 type="text"
-                                placeholder={initialValues.name}
+                                placeholder={stateName}
                             />
 
                             <Button disabled={!(isValid && dirty) || isSubmitting} type="submit">Submit</Button>

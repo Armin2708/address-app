@@ -1,20 +1,23 @@
-import SidebarWithHeader from "./components/shared/SideBar.jsx";
+import SidebarWithHeader from "../components/shared/SideBar.jsx";
 import {useEffect, useState} from "react";
-import {getStates} from "./services/client.js";
-import { Wrap, WrapItem, Spinner, Text } from '@chakra-ui/react'
-import CreateCountryDrawerForm from "./components/country/CreateCountryDrawerForm.jsx";
-import {errorNotification} from "./services/notification.js";
-import CardWithImage from "./components/country/CountryCard.jsx";
+import {getStates} from "../services/stateClient.js";
+import {Wrap, WrapItem, Spinner, Text, Button} from '@chakra-ui/react'
+import {errorNotification} from "../services/notification.js";
+
+import {Link, useParams} from "react-router-dom";
+import CreateStateDrawerForm from "../components/state/CreateStateDrawerForm.jsx";
+import StateCardWithImage from "../components/state/StateCard.jsx";
 
 const StatesPage = () =>{
 
+    const { countryId } = useParams();
     const [states, setStates] = useState([]);
     const [loading, setLoading] = useState(false);
     const [err, setError] = useState("");
 
     const fetchStates = () =>{
         setLoading(true);
-        getStates().then(res =>{
+        getStates(countryId).then(res =>{
             setStates(res.data)
         }).catch(err =>{
             setError(err.response.data.message)
@@ -50,9 +53,12 @@ const StatesPage = () =>{
     if(err){
         return (
             <SidebarWithHeader>
-                <CreateCountryDrawerForm
+                <Link to="/countries">
+                    <Button colorScheme='green'>Return</Button>
+                </Link>
+                <CreateStateDrawerForm
                     fetchStates={fetchStates}
-                ></CreateCountryDrawerForm>
+                ></CreateStateDrawerForm>
                 <Text>Ooops there was an error</Text>
             </SidebarWithHeader>
         )
@@ -62,9 +68,12 @@ const StatesPage = () =>{
     if(states.length<=0){
         return (
             <SidebarWithHeader>
-                <CreateCountryDrawerForm
+                <Link to="/countries">
+                    <Button colorScheme='green'>Return</Button>
+                </Link>
+                <CreateStateDrawerForm
                     fetchStates={fetchStates}
-                    ></CreateCountryDrawerForm>
+                    ></CreateStateDrawerForm>
                 <Text>No States Available</Text>
             </SidebarWithHeader>
         )
@@ -72,14 +81,18 @@ const StatesPage = () =>{
 
     return (
         <SidebarWithHeader>
-            <CreateCountryDrawerForm
+            <Link to="/countries">
+                <Button colorScheme='green'>Return</Button>
+            </Link>
+            <CreateStateDrawerForm
                 fetchStates={fetchStates}
             />
             <Wrap justify={"center"} spacing={"30px"}>
                 {states.map((state,index) => (
                     <WrapItem key={index}>
-                        <CardWithImage
-                            {...state}
+                        <StateCardWithImage
+                            stateId={state.state_id}
+                            stateName={state.name}
                             fetchStates={fetchStates}
                         />
                     </WrapItem>

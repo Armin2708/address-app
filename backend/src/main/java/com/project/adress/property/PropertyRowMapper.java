@@ -12,7 +12,7 @@ public class PropertyRowMapper implements RowMapper<Property> {
     public Property mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new Property(
                 rs.getInt("property_id"),
-                rs.getString("property_number"),
+                rs.getString("name"),
                 rs.getInt("street_id")
                 );
     }

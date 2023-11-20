@@ -32,12 +32,13 @@ class CityServiceTest {
     void getAllCities() {
 
         //Given
+        Integer stateId=10;
 
         //When
-        underTest.getAllCities();
+        underTest.getAllCities(stateId);
 
         //Then
-        verify(cityDao).selectAllCities();
+        verify(cityDao).selectAllCities(stateId);
     }
 
     @Test

@@ -9,25 +9,23 @@ import {
     Button,
     useDisclosure,
 } from "@chakra-ui/react";
-import { deleteCountry } from "../../services/client.js";
+import { deleteState } from "../../services/stateClient.js";
 import { errorNotification, successNotification } from "../../services/notification.js";
 
-function DeleteCountryPopUp({ id, name }) {
+function DeleteStatePopUp({ stateId, stateName, fetchStates }) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const cancelRef = React.useRef();
 
     const handleDelete = async () => {
         try {
-            // Call the deleteCountry function with the given id
-            await deleteCountry(id);
-            // Display success notification
-            successNotification(`${name} deleted successfully.`);
-            // Close the popup after successful deletion
+            await deleteState(stateId);
+            successNotification(`${stateName} deleted successfully.`);
             onClose();
+            fetchStates();
         } catch (error) {
-            // Display error notification if deletion fails
-            errorNotification("Failed to delete the country.");
+            errorNotification("Failed to delete the state.");
         }
+
     };
 
     return (
@@ -41,14 +39,14 @@ function DeleteCountryPopUp({ id, name }) {
                     boxShadow: 'lg'
                 }}
                 onClick={onOpen}>
-                Delete {name}
+                Delete {stateName}
             </Button>
 
             <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
                 <AlertDialogOverlay>
                     <AlertDialogContent>
                         <AlertDialogHeader fontSize="lg" fontWeight="bold">
-                            Delete {name}
+                            Delete {stateName}
                         </AlertDialogHeader>
 
                         <AlertDialogBody>
@@ -70,4 +68,4 @@ function DeleteCountryPopUp({ id, name }) {
     );
 }
 
-export default DeleteCountryPopUp;
+export default DeleteStatePopUp;

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/countries/states/cities")
+@RequestMapping("api/v1/countries/{stateId}/cities")
 public class CityController {
 
     private final CityService cityService;
@@ -14,7 +14,11 @@ public class CityController {
     public CityController(CityService cityService){this.cityService = cityService;}
 
     @GetMapping
-    public List<City> getCity(){return cityService.getAllCities();}
+    public List<City> getCities(
+            @PathVariable String stateId
+    ){
+        Integer stateIdInt = Integer.parseInt(stateId);
+        return cityService.getAllCities(stateIdInt);}
 
     @GetMapping("{cityId}")
     public City getCity(
@@ -23,12 +27,21 @@ public class CityController {
     }
 
     @PostMapping
-    public void registerCity(@RequestBody CityRegistrationRequest request){
-        cityService.addCity(request);
+    public void registerCity(
+            @RequestBody CityRegistrationRequest request,
+            @PathVariable String stateId){
+        Integer stateIdInt = Integer.parseInt(stateId);
+        CityRegistrationRequest cityRegistrationRequest = new CityRegistrationRequest(
+                request.cityId(),
+                request.cityName(),
+                stateIdInt
+        );
+        cityService.addCity(cityRegistrationRequest);
     }
 
     @DeleteMapping("{cityId}")
-    public void deleteCity(@PathVariable("cityId") Integer cityId){
+    public void deleteCity(
+            @PathVariable("cityId") Integer cityId){
         cityService.deleteCity(cityId);
     }
 

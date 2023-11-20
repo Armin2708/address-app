@@ -16,7 +16,7 @@ public class StreetService {
     public StreetService(@Qualifier("Streetjdbc") StreetDao streetDao){
         this.streetDao = streetDao;
     }
-    public List<Street> getAllStreets(){return streetDao.selectAllStreets();}
+    public List<Street> getAllStreets(Integer cityId){return streetDao.selectAllStreets(cityId);}
 
     public Street getStreet(Integer id){
         return streetDao.selectStreetById(id)
